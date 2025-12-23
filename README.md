@@ -1,64 +1,131 @@
 # Varsity EdTech Platform
 
-A high-performance, industrial-grade learning ecosystem built with React, Node.js, and SQLite.
+A high-performance, industrial-grade learning ecosystem built with React 18, Node.js, and SQLite — featuring role-based access control, live YouTube media integration, and SCORM-inspired progress tracking.
+
+---
+
+## Project Overview
+
+Varsity is a full-stack EdTech platform that simulates a production-ready course delivery system. It supports three user roles — Student, Instructor, and Admin — each with a dedicated dashboard and scoped access. The platform enables instructors to create and manage courses with YouTube-embedded lesson content, while students can enroll, track progress, and earn certificates.
+
+Built as a monorepo with a React + TypeScript frontend (Vite) and an Express + TypeScript backend (SQLite via `better-sqlite3`), the system demonstrates industrial patterns including TanStack Query caching, Zustand global state, JWT-secured RBAC, and real-time SQL analytics.
+
+---
 
 ## Getting Started
 
 ### Backend Setup
-1. `cd server`
-2. `npm install`
-3. `npm run seed` (Initializes and seeds the database with YouTube assets)
-4. `npm run dev`
+```bash
+cd server
+npm install
+npm run seed      # Seeds the DB with courses, users, and YouTube assets
+npm run dev
+```
 
 ### Frontend Setup
-1. `cd client`
-2. `npm install`
-3. `npm run dev`
+```bash
+cd client
+npm install
+npm run dev
+```
 
 ---
 
-##  System Credentials
+## System Credentials
 
 | Role | Email | Password | Access Level |
 | :--- | :--- | :--- | :--- |
-| **Student** | `jane@varsity.com` | `password123` | Portal access, Enrolled course view, Lesson player. |
-| **Instructor** | `instructor@varsity.com` | `password123` | Course creation terminal, Student monitoring. |
-| **Admin** | `admin@varsity.com` | `password123` | Global system control, Instructor verification, Course expiry. |
-| **Pending** | `pending@varsity.com` | `password123` | Instructor account awaiting Admin verification. |
+| Student | `jane@varsity.com` | `password123` | Dashboard, course catalog, lesson player, progress tracker |
+| Instructor | `instructor@varsity.com` | `password123` | Course creation, student monitoring, analytics |
+| Admin | `admin@varsity.com` | `password123` | Global system control, instructor verification, course expiry |
+| Pending | `pending@varsity.com` | `password123` | Awaiting admin verification — restricted access |
 
 ---
 
-##  Tech Stack
-- **Frontend**: React 18, TypeScript, Tailwind CSS v4 , Zustand (State), TanStack Query (Caching), Framer Motion (Animations), Lucide-React (Icons).
-- **Backend**: Node.js, Express, TypeScript, SQLite3 (Better-sqlite3), JWT, BcryptJS.
-- **Tools**: Vite, Nodemon, TS-Node.
+## Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| Frontend | React 18, TypeScript, Tailwind CSS v4, Vite |
+| State | Zustand (global), TanStack Query (server cache) |
+| UI / Motion | Framer Motion, Lucide-React |
+| Backend | Node.js, Express, TypeScript |
+| Database | SQLite3 via `better-sqlite3` |
+| Auth | JWT + BcryptJS |
+| Dev Tools | Nodemon, TS-Node, Vitest |
 
 ---
 
-##  Industrial Features
+## Architecture
+
+```
+Varsity-task-assignment/
+├── client/               # React 18 + TypeScript SPA (Vite)
+│   └── src/
+│       ├── pages/        # AdminDashboard, InstructorDashboard, Dashboard,
+│       │                 # CourseNavigation, CoursesExplorer, CourseDetails,
+│       │                 # Analytics, Certification, Settings, MyAssets
+│       ├── components/   # Shared UI components
+│       ├── store/        # Zustand slices
+│       └── services/     # API service layer (TanStack Query)
+└── server/               # Express + TypeScript REST API
+    └── src/
+        ├── routes/       # course, auth, progress, enrollment routes
+        ├── middleware/    # JWT auth, RBAC guards
+        ├── db/           # better-sqlite3 connection and schema
+        └── __tests__/    # Vitest unit tests
+```
+
+---
+
+## Key Features
 
 ### 1. Advanced Course Discovery
-- **Paginated Explorer**: High-performance "Catalog" at `/courses` supporting large-scale asset discovery (20 items per page by default).
-- **Multi-Factor Filtering**: Professional-grade search with category slugs, keywords, and "Free vs. Premium" asset toggles.
-- **Dynamic Metadata**: Real-time category injection from the backend database for accurate filtering.
+- Paginated Catalog (`/courses`) — high-performance browsing with 20 items per page.
+- Multi-Factor Filtering — search by category, keyword, and Free vs. Premium toggle.
+- Dynamic Metadata — categories injected live from the database.
 
-### 2. Live Media Integration
-- **YouTube Stream Injection**: Integrated high-performance `iframe` players in both **Course Details** and the **Learning Terminal**.
-- **Preview Sessions**: Automatic detection of the first module's preview lesson for authenticated and visitor previews.
-- **Locked Content**: Secure logic that gates premium YouTube streams behind enrollment and role-based validation.
+### 2. Live YouTube Media Integration
+- Stream Injection — `iframe` players embedded in Course Details and the Learning Player.
+- Preview Sessions — first module's lesson auto-detected for unauthenticated previews.
+- Content Gating — premium lessons locked behind enrollment and role validation.
 
-### 3. SCORM-Inspired Progress Tracker
-- **Automatic Resume**: The system intelligently identifies where a student left off, auto-loading the first uncompleted lesson upon entering the terminal.
-- **Sync-Everywhere**: Real-time persistence of "Started" and "Completed" lesson states in the `user_progress` table.
-- **Visual Feedback**: Sidebar curriculum navigation with live checkmarks and completion indicators.
+### 3. SCORM-Inspired Progress Tracking
+- Auto-Resume — system identifies the last uncompleted lesson and resumes automatically.
+- Sync-Everywhere — Started / Completed states persisted in real-time to `user_progress`.
+- Visual Feedback — sidebar navigation with live checkmarks and completion indicators.
 
-### 4. Executive Analytics
-- **Real-Time Progress Calculation**: Backend SQL subqueries compute exact completion percentages (e.g., "75% Complete") for every enrolled course on the fly.
-- **Visual Progress Guards**: High-fidelity motion progress bars on the user dashboard.
-- **Stat Cards**: Industrial-grade dashboard monitoring for Time Invested, Skill Index, and Course Assets.
+### 4. Executive Analytics Dashboard
+- Real-Time Completion % — SQL subqueries compute exact progress per enrolled course.
+- Motion Progress Bars — Framer Motion animated progress indicators.
+- Stat Cards — Time Invested, Skill Index, and total Course Assets at a glance.
 
-### 5. Role-Based Access (RBAC)
-- **Student Terminal**: Access-restricted learning environment with progress tracking.
-- **Instructor Forge**: Dashboard for course management and student monitoring.
-- **Admin Control**: Global system oversight, including instructor verification and account management.
- 
+### 5. Role-Based Access Control (RBAC)
+- Student Dashboard — personal learning hub with enrolled courses and certificates.
+- Instructor Dashboard — course management, creation wizard, and student monitoring.
+- Admin Control — global oversight, instructor verification, and account management.
+- Certification — auto-generated certificates on 100% course completion.
+
+---
+
+## Testing
+
+```bash
+cd server && npx vitest        # Backend unit tests
+cd client && npx vitest        # Frontend component tests
+```
+
+---
+
+## Environment Variables
+
+**Server** (`server/.env`):
+```env
+PORT=5000
+JWT_SECRET=your_jwt_secret
+```
+
+**Client** (`client/.env`):
+```env
+VITE_API_URL=http://localhost:5000
+```
