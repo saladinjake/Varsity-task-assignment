@@ -81,30 +81,34 @@ Varsity-task-assignment/
 ## Key Features
 
 ### 1. Advanced Course Discovery
-- Paginated Catalog (`/courses`) — high-performance browsing with 20 items per page.
-- Multi-Factor Filtering — search by category, keyword, and Free vs. Premium toggle.
-- Dynamic Metadata — categories injected live from the database.
+- Paginated Catalog (`/courses`) — high-performance browsing with 20 items per page, with server-side pagination.
+- Multi-Factor Filtering — simultaneous filtering by category, keyword, and Free vs. Premium status.
+- Dynamic Metadata — course categories and asset counts are computed live from the database on each request.
+- Search Persistence — active filters preserved across page navigations using Zustand.
 
 ### 2. Live YouTube Media Integration
-- Stream Injection — `iframe` players embedded in Course Details and the Learning Player.
-- Preview Sessions — first module's lesson auto-detected for unauthenticated previews.
-- Content Gating — premium lessons locked behind enrollment and role validation.
+- Stream Injection — embedded `iframe` players in both the Course Details preview and the full Learning Player.
+- Preview Sessions — the first module's lesson is automatically surfaced for unauthenticated visitors as a teaser.
+- Content Gating — premium lesson content is locked behind enrollment checks and JWT role validation.
+- Lesson Navigation — module sidebar with sequential lesson links and watched-state indicators.
 
 ### 3. SCORM-Inspired Progress Tracking
-- Auto-Resume — system identifies the last uncompleted lesson and resumes automatically.
-- Sync-Everywhere — Started / Completed states persisted in real-time to `user_progress`.
-- Visual Feedback — sidebar navigation with live checkmarks and completion indicators.
+- Auto-Resume — the platform identifies the last incomplete lesson and redirects the student to pick up where they left off.
+- Sync-Everywhere — lesson `Started` and `Completed` states are persisted in real-time to the `user_progress` table.
+- Visual Feedback — sidebar navigation renders live checkmarks and a per-module completion percentage.
+- Certificate Unlock — a downloadable certificate is issued automatically when all lessons reach `Completed` status.
 
 ### 4. Executive Analytics Dashboard
-- Real-Time Completion % — SQL subqueries compute exact progress per enrolled course.
-- Motion Progress Bars — Framer Motion animated progress indicators.
-- Stat Cards — Time Invested, Skill Index, and total Course Assets at a glance.
+- Real-Time Completion % — SQL subqueries compute exact per-course progress ratios without caching lag.
+- Motion Progress Bars — Framer Motion spring-animated bars reflect current completion on every page load.
+- Stat Cards — Time Invested, Skill Index, and total Course Assets presented in an at-a-glance summary grid.
+- Instructor Analytics — per-course enrollment counts and lesson engagement rates visible in the instructor view.
 
 ### 5. Role-Based Access Control (RBAC)
-- Student Dashboard — personal learning hub with enrolled courses and certificates.
-- Instructor Dashboard — course management, creation wizard, and student monitoring.
-- Admin Control — global oversight, instructor verification, and account management.
-- Certification — auto-generated certificates on 100% course completion.
+- Student Dashboard — personal learning hub displaying enrolled courses, progress bars, and earned certificates.
+- Instructor Dashboard — full course lifecycle management: creation wizard, lesson editor, and student monitoring.
+- Admin Control — global oversight of all users, instructor verification workflow, and course expiry management.
+- Pending State — newly registered instructors enter a pending queue until explicitly approved by an admin.
 
 ---
 
@@ -129,3 +133,7 @@ JWT_SECRET=your_jwt_secret
 ```env
 VITE_API_URL=http://localhost:5000
 ```
+
+---
+
+Developed as part of the FixNuewYearBug project portfolio. Last updated May 2026.
